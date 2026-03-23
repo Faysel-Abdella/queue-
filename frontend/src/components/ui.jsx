@@ -23,6 +23,35 @@ export const Section = ({ id, eyebrow, title, subtitle, children }) => (
   </section>
 );
 
+export const PageHero = ({
+            {rows.map((row, rowIndex) => {
+              const rowKey = getRowKey ? getRowKey(row, rowIndex) : row.id || rowIndex;
+              return (
+                <tr key={rowKey} className={rowClassName}>
+                  {columns.map((column) => {
+                    const rawValue = row[column.key];
+                    return (
+                      <td
+                        key={`${rowKey}-${column.key}`}
+                        className={column.cellClassName || "px-4 py-4"}
+                      >
+                        {column.render
+                          ? column.render(rawValue, row, rowIndex)
+                          : rawValue}
+                      </td>
+                    );
+                  })}
+                </tr>
+              );
+            })}
+      )}
+    </div>
+    {actions && (
+      <div className="mt-4 flex flex-wrap items-center gap-3">{actions}</div>
+    )}
+  </div>
+);
+
 export const MetricCard = ({
   label,
   value,
@@ -98,6 +127,55 @@ export const Table = ({
                 {value}
               </td>
             ))}
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+);
+
+export const DataTable = ({
+  columns,
+  rows,
+  getRowKey,
+  className = "",
+  rowClassName = "text-sm text-slate-200",
+}) => (
+  <div
+    className={`overflow-hidden rounded-3xl border border-white/10 bg-slate-950/70 shadow-lg shadow-slate-950/40 ${className}`}
+  >
+    <table className="min-w-full divide-y divide-white/10">
+      <thead className="bg-slate-950/80">
+        <tr>
+          {columns.map((column) => (
+            <th
+              key={column.key}
+              className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-300"
+            >
+              {column.header}
+            </th>
+          ))}
+        </tr>
+      </thead>
+      <tbody className="divide-y divide-white/10">
+        {rows.map((row, rowIndex) => (
+          <tr
+            key={getRowKey ? getRowKey(row, rowIndex) : row.id || rowIndex}
+            className={rowClassName}
+          >
+            {columns.map((column) => {
+              const rawValue = row[column.key];
+              return (
+                <td
+                  key={`${column.key}-${getRowKey ? getRowKey(row, rowIndex) : row.id || rowIndex}`}
+                  className={column.cellClassName || "px-4 py-4"}
+                >
+                  {column.render
+                    ? column.render(rawValue, row, rowIndex)
+                    : rawValue}
+                </td>
+              );
+            })}
           </tr>
         ))}
       </tbody>

@@ -1,4 +1,5 @@
 import React from "react";
+import { DataTable, PageHero } from "../../../components/ui";
 
 const RolesPermissionsPage = () => {
   const roles = ["Admin", "Supervisor", "Operations", "Support"];
@@ -17,51 +18,50 @@ const RolesPermissionsPage = () => {
     Support: [false, false, true, false, false],
   };
 
+  const columns = [
+    {
+      key: "permission",
+      header: "Permission",
+      cellClassName: "px-4 py-4 font-semibold text-white",
+    },
+    ...roles.map((role) => ({
+      key: role,
+      header: role,
+      render: (isGranted) =>
+        isGranted ? (
+          <span className="rounded-full border border-emerald-400/30 bg-emerald-500/15 px-3 py-1 text-xs font-semibold text-emerald-300">
+            Granted
+          </span>
+        ) : (
+          <span className="rounded-full border border-rose-400/30 bg-rose-500/15 px-3 py-1 text-xs font-semibold text-rose-300">
+            Restricted
+          </span>
+        ),
+    })),
+  ];
+
+  const rows = permissions.map((permission, index) => {
+    const row = { permission };
+
+    roles.forEach((role) => {
+      row[role] = accessMatrix[role][index];
+    });
+
+    return row;
+  });
+
   return (
     <div className="space-y-6">
-      <div className="rounded-3xl border border-white/10 bg-gradient-to-br from-slate-950/90 via-slate-900/70 to-blue-950/70 p-6 shadow-lg shadow-slate-950/40">
-        <h2 className="text-2xl font-semibold text-white">
-          Roles & Permissions
-        </h2>
-        <p className="mt-2 text-sm text-slate-300">
-          Access policies are view-only in demo mode. This matrix reflects
-          enterprise-grade governance for queue operations.
-        </p>
-      </div>
+      <PageHero
+        title="Roles & Permissions"
+        description="Access policies are view-only in demo mode. This matrix reflects enterprise-grade governance for queue operations."
+      />
 
-      <div className="overflow-hidden rounded-3xl border border-white/10 bg-slate-950/70 shadow-lg shadow-slate-950/40">
-        <table className="min-w-full divide-y divide-white/10">
-          <thead className="bg-slate-950/80">
-            <tr>
-              <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-300">
-                Permission
-              </th>
-              {roles.map((role) => (
-                <th
-                  key={role}
-                  className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-300"
-                >
-                  {role}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-white/10">
-            {permissions.map((permission, index) => (
-              <tr key={permission} className="text-sm text-slate-200">
-                <td className="px-4 py-4 font-semibold text-white">
-                  {permission}
-                </td>
-                {roles.map((role) => (
-                  <td key={`${role}-${permission}`} className="px-4 py-4">
-                    {accessMatrix[role][index] ? "Granted" : "Restricted"}
-                  </td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      <DataTable
+        columns={columns}
+        rows={rows}
+        getRowKey={(row) => row.permission}
+      />
 
       {/* Role policies would be enforced by auth middleware and stored in an IAM service. */}
     </div>
