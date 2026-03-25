@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import { Link } from "react-router-dom";
-import { DataTable, PageHero } from "../../../components/ui";
+import { DataTable, PageHero, StatusBadge } from "../../../components/ui";
 
 const SupportTicketsPage = () => {
   const tickets = useMemo(
@@ -33,10 +33,10 @@ const SupportTicketsPage = () => {
     [],
   );
 
-  const statusBadge = {
-    Open: "bg-rose-500/15 text-rose-300",
-    "In Progress": "bg-amber-500/15 text-amber-300",
-    Resolved: "bg-emerald-500/15 text-emerald-300",
+  const statusTone = {
+    Open: "danger",
+    "In Progress": "warning",
+    Resolved: "success",
   };
 
   const ticketColumns = [
@@ -59,13 +59,7 @@ const SupportTicketsPage = () => {
     {
       key: "status",
       header: "Status",
-      render: (value) => (
-        <span
-          className={`rounded-full border border-white/10 px-3 py-1 text-xs font-semibold ${statusBadge[value]}`}
-        >
-          {value}
-        </span>
-      ),
+      render: (value) => <StatusBadge label={value} tone={statusTone[value]} />,
     },
     { key: "createdAt", header: "Created" },
   ];
