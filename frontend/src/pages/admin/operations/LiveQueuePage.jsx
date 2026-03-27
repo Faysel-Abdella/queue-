@@ -1,11 +1,10 @@
 import React, { useMemo } from "react";
-import { AlertTriangle } from "lucide-react";
-import { DataTable, PageHero, Pill } from "../../../components/ui";
+import { DataTable, PageHero, Pill, StatusBadge } from "../../../components/ui";
 
-const statusStyles = {
-  Waiting: "bg-amber-500/15 text-amber-300 border-amber-400/30",
-  Called: "bg-emerald-500/15 text-emerald-300 border-emerald-400/30",
-  Delayed: "bg-rose-500/15 text-rose-300 border-rose-400/30",
+const statusTone = {
+  Waiting: "warning",
+  Called: "success",
+  Delayed: "danger",
 };
 
 const LiveQueuePage = () => {
@@ -68,14 +67,7 @@ const LiveQueuePage = () => {
         key: "status",
         header: "Status",
         render: (value) => (
-          <span
-            className={`rounded-full border px-3 py-1 text-xs font-semibold ${
-              statusStyles[value] ||
-              "border-white/10 bg-slate-900/70 text-slate-200"
-            }`}
-          >
-            {value}
-          </span>
+          <StatusBadge label={value} tone={statusTone[value]} />
         ),
       },
       {
@@ -83,13 +75,9 @@ const LiveQueuePage = () => {
         header: "Priority",
         render: (value) =>
           value === "High" ? (
-            <span className="inline-flex items-center gap-1 rounded-full border border-rose-400/30 bg-rose-500/15 px-3 py-1 text-xs font-semibold text-rose-300">
-              <AlertTriangle size={12} /> Priority
-            </span>
+            <StatusBadge label="Priority" tone="danger" />
           ) : (
-            <span className="rounded-full border border-white/10 bg-slate-900/70 px-3 py-1 text-xs font-semibold text-slate-200">
-              Standard
-            </span>
+            <StatusBadge label="Standard" tone="neutral" />
           ),
       },
     ],
