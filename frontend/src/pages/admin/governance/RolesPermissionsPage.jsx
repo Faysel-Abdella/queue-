@@ -1,5 +1,5 @@
 import React from "react";
-import { DataTable, PageHero } from "../../../components/ui";
+import { DataTable, PageHero, StatusBadge } from "../../../components/ui";
 
 const RolesPermissionsPage = () => {
   const roles = ["Admin", "Supervisor", "Operations", "Support"];
@@ -29,13 +29,9 @@ const RolesPermissionsPage = () => {
       header: role,
       render: (isGranted) =>
         isGranted ? (
-          <span className="rounded-full border border-emerald-400/30 bg-emerald-500/15 px-3 py-1 text-xs font-semibold text-emerald-300">
-            Granted
-          </span>
+          <StatusBadge label="Granted" tone="success" />
         ) : (
-          <span className="rounded-full border border-rose-400/30 bg-rose-500/15 px-3 py-1 text-xs font-semibold text-rose-300">
-            Restricted
-          </span>
+          <StatusBadge label="Restricted" tone="danger" />
         ),
     })),
   ];
