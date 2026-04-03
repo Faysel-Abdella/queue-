@@ -152,10 +152,13 @@ export const Table = ({
 
 export const DataTable = ({
   columns,
-  rows,
+  rows = [],
   getRowKey,
   className = "",
   rowClassName = "text-sm text-slate-200",
+  emptyMessage = "No records available.",
+  emptyDescription,
+  emptyAction,
 }) => (
   <div
     className={`overflow-hidden rounded-3xl border border-white/10 bg-slate-950/70 shadow-lg shadow-slate-950/40 ${className}`}
@@ -174,29 +177,45 @@ export const DataTable = ({
         </tr>
       </thead>
       <tbody className="divide-y divide-white/10">
-        {rows.map((row, rowIndex) => {
-          const rowKey = getRowKey
-            ? getRowKey(row, rowIndex)
-            : row.id || rowIndex;
+        {rows.length === 0 ? (
+          <tr>
+            <td colSpan={columns.length} className="px-4 py-10 text-center">
+              <p className="text-sm font-semibold text-slate-200">
+                {emptyMessage}
+              </p>
+              {emptyDescription && (
+                <p className="mt-1 text-xs text-slate-400">
+                  {emptyDescription}
+                </p>
+              )}
+              {emptyAction && <div className="mt-4">{emptyAction}</div>}
+            </td>
+          </tr>
+        ) : (
+          rows.map((row, rowIndex) => {
+            const rowKey = getRowKey
+              ? getRowKey(row, rowIndex)
+              : row.id || rowIndex;
 
-          return (
-            <tr key={rowKey} className={rowClassName}>
-              {columns.map((column) => {
-                const rawValue = row[column.key];
-                return (
-                  <td
-                    key={`${rowKey}-${column.key}`}
-                    className={column.cellClassName || "px-4 py-4"}
-                  >
-                    {column.render
-                      ? column.render(rawValue, row, rowIndex)
-                      : rawValue}
-                  </td>
-                );
-              })}
-            </tr>
-          );
-        })}
+            return (
+              <tr key={rowKey} className={rowClassName}>
+                {columns.map((column) => {
+                  const rawValue = row[column.key];
+                  return (
+                    <td
+                      key={`${rowKey}-${column.key}`}
+                      className={column.cellClassName || "px-4 py-4"}
+                    >
+                      {column.render
+                        ? column.render(rawValue, row, rowIndex)
+                        : rawValue}
+                    </td>
+                  );
+                })}
+              </tr>
+            );
+          })
+        )}
       </tbody>
     </table>
   </div>
