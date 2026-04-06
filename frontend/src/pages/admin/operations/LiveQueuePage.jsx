@@ -1,5 +1,11 @@
 import React, { useMemo } from "react";
-import { DataTable, PageHero, Pill, StatusBadge } from "../../../components/ui";
+import {
+  ActionButton,
+  DataTable,
+  PageHero,
+  Pill,
+  StatusBadge,
+} from "../../../components/ui";
 
 const statusTone = {
   Waiting: "warning",
@@ -96,21 +102,12 @@ const LiveQueuePage = () => {
         }
         actions={
           <>
-            <button className="rounded-full bg-sky-500/20 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-slate-950/40">
-              Call Next
-            </button>
-            <button className="rounded-full border border-white/10 bg-slate-950/40 px-4 py-2 text-sm font-semibold text-slate-200">
-              Mark Served
-            </button>
-            <button className="rounded-full border border-white/10 bg-slate-950/40 px-4 py-2 text-sm font-semibold text-slate-200">
-              Mark No-Show
-            </button>
-            <button
-              className="rounded-full border border-white/10 bg-slate-950/40 px-4 py-2 text-sm font-semibold text-slate-400"
-              disabled
-            >
+            <ActionButton tone="primary">Call Next</ActionButton>
+            <ActionButton tone="secondary">Mark Served</ActionButton>
+            <ActionButton tone="secondary">Mark No-Show</ActionButton>
+            <ActionButton tone="muted" disabled>
               Escalate (demo)
-            </button>
+            </ActionButton>
           </>
         }
       />
