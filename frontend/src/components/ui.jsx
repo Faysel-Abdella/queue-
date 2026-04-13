@@ -83,7 +83,7 @@ export const InfoCard = ({
     <p className={`text-xs uppercase tracking-[0.2em] ${labelClassName}`}>
       {label}
     </p>
-    {(value !== undefined && value !== null && value !== "") && (
+    {value !== undefined && value !== null && value !== "" && (
       <p className={`mt-2 text-xl font-semibold ${valueClassName}`}>{value}</p>
     )}
     {detail && <p className={`mt-2 text-sm ${detailClassName}`}>{detail}</p>}
