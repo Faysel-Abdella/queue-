@@ -1,5 +1,6 @@
 import React, { useMemo } from "react";
 import { Link, useParams } from "react-router-dom";
+import { InfoCard, PageHero } from "../../../components/ui";
 
 const SupportTicketDetailPage = () => {
   const { ticketId } = useParams();
@@ -21,24 +22,18 @@ const SupportTicketDetailPage = () => {
 
   return (
     <div className="space-y-6">
-      <div className="rounded-3xl border border-white/10 bg-gradient-to-br from-slate-950/90 via-slate-900/70 to-blue-950/70 p-6 shadow-lg shadow-slate-950/40">
-        <div className="flex items-center justify-between">
-          <div>
-            <h2 className="text-2xl font-semibold text-white">
-              Ticket {detail.id}
-            </h2>
-            <p className="mt-2 text-sm text-slate-300">
-              Support case detail and resolution tracking.
-            </p>
-          </div>
+      <PageHero
+        title={`Ticket ${detail.id}`}
+        description="Support case detail and resolution tracking."
+        actions={
           <Link
             to="/admin/support/tickets"
             className="text-sm font-semibold text-slate-300 hover:text-white"
           >
             Back to Tickets
           </Link>
-        </div>
-      </div>
+        }
+      />
 
       <div className="grid gap-6 lg:grid-cols-[2fr_1fr]">
         <div className="rounded-3xl border border-white/10 bg-slate-950/70 p-6 shadow-lg shadow-slate-950/40">
@@ -64,20 +59,8 @@ const SupportTicketDetailPage = () => {
         </div>
 
         <div className="space-y-4">
-          <div className="rounded-2xl border border-white/10 bg-slate-950/70 p-5 shadow-lg shadow-slate-950/40">
-            <p className="text-xs uppercase tracking-[0.2em] text-slate-400">
-              Assigned Agent
-            </p>
-            <p className="mt-3 text-lg font-semibold text-white">
-              {detail.assignedAgent}
-            </p>
-          </div>
-          <div className="rounded-2xl border border-white/10 bg-slate-950/70 p-5 shadow-lg shadow-slate-950/40">
-            <p className="text-xs uppercase tracking-[0.2em] text-slate-400">
-              Resolution Notes
-            </p>
-            <p className="mt-3 text-sm text-slate-300">{detail.resolution}</p>
-          </div>
+          <InfoCard label="Assigned Agent" value={detail.assignedAgent} />
+          <InfoCard label="Resolution Notes" detail={detail.resolution} />
         </div>
       </div>
 
