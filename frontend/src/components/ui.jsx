@@ -174,26 +174,29 @@ export const DataTable = ({
         </tr>
       </thead>
       <tbody className="divide-y divide-white/10">
-        {rows.map((row, rowIndex) => (
-          <tr
-            key={getRowKey ? getRowKey(row, rowIndex) : row.id || rowIndex}
-            className={rowClassName}
-          >
-            {columns.map((column) => {
-              const rawValue = row[column.key];
-              return (
-                <td
-                  key={`${column.key}-${getRowKey ? getRowKey(row, rowIndex) : row.id || rowIndex}`}
-                  className={column.cellClassName || "px-4 py-4"}
-                >
-                  {column.render
-                    ? column.render(rawValue, row, rowIndex)
-                    : rawValue}
-                </td>
-              );
-            })}
-          </tr>
-        ))}
+        {rows.map((row, rowIndex) => {
+          const rowKey = getRowKey
+            ? getRowKey(row, rowIndex)
+            : row.id || rowIndex;
+
+          return (
+            <tr key={rowKey} className={rowClassName}>
+              {columns.map((column) => {
+                const rawValue = row[column.key];
+                return (
+                  <td
+                    key={`${rowKey}-${column.key}`}
+                    className={column.cellClassName || "px-4 py-4"}
+                  >
+                    {column.render
+                      ? column.render(rawValue, row, rowIndex)
+                      : rawValue}
+                  </td>
+                );
+              })}
+            </tr>
+          );
+        })}
       </tbody>
     </table>
   </div>
