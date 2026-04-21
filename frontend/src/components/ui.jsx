@@ -108,6 +108,31 @@ export const StatusBadge = ({ label, tone = "neutral", className = "" }) => {
   );
 };
 
+export const ActionButton = ({
+  children,
+  tone = "secondary",
+  className = "",
+  disabled = false,
+  ...props
+}) => {
+  const tones = {
+    primary: "bg-sky-500/20 text-white shadow-lg shadow-slate-950/40",
+    secondary:
+      "border border-white/10 bg-slate-950/40 text-slate-200 hover:bg-slate-900/70",
+    muted: "border border-white/10 bg-slate-950/40 text-slate-400",
+  };
+
+  return (
+    <button
+      className={`rounded-full px-4 py-2 text-sm font-semibold ${tones[tone] || tones.secondary} ${className}`}
+      disabled={disabled}
+      {...props}
+    >
+      {children}
+    </button>
+  );
+};
+
 export const Table = ({
   columns,
   data,
