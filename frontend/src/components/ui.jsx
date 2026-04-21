@@ -24,26 +24,24 @@ export const Section = ({ id, eyebrow, title, subtitle, children }) => (
 );
 
 export const PageHero = ({
-            {rows.map((row, rowIndex) => {
-              const rowKey = getRowKey ? getRowKey(row, rowIndex) : row.id || rowIndex;
-              return (
-                <tr key={rowKey} className={rowClassName}>
-                  {columns.map((column) => {
-                    const rawValue = row[column.key];
-                    return (
-                      <td
-                        key={`${rowKey}-${column.key}`}
-                        className={column.cellClassName || "px-4 py-4"}
-                      >
-                        {column.render
-                          ? column.render(rawValue, row, rowIndex)
-                          : rawValue}
-                      </td>
-                    );
-                  })}
-                </tr>
-              );
-            })}
+  title,
+  description,
+  badge,
+  actions,
+  className = "",
+}) => (
+  <div
+    className={`rounded-3xl border border-white/10 bg-gradient-to-br from-slate-950/90 via-slate-900/70 to-blue-950/70 p-6 shadow-lg shadow-slate-950/40 ${className}`}
+  >
+    <div className="flex flex-wrap items-start justify-between gap-4">
+      <div>
+        <h2 className="text-2xl font-semibold text-white">{title}</h2>
+        {description && (
+          <p className="mt-2 text-sm text-slate-300">{description}</p>
+        )}
+      </div>
+      {badge && (
+        <div className="flex flex-wrap items-center gap-2">{badge}</div>
       )}
     </div>
     {actions && (
@@ -91,6 +89,24 @@ export const Pill = ({ children, className = "" }) => (
     {children}
   </span>
 );
+
+export const StatusBadge = ({ label, tone = "neutral", className = "" }) => {
+  const tones = {
+    neutral: "border-white/10 bg-slate-900/70 text-slate-200",
+    success: "border-emerald-400/30 bg-emerald-500/15 text-emerald-300",
+    warning: "border-amber-400/30 bg-amber-500/15 text-amber-300",
+    danger: "border-rose-400/30 bg-rose-500/15 text-rose-300",
+    info: "border-sky-400/30 bg-sky-500/15 text-sky-300",
+  };
+
+  return (
+    <span
+      className={`rounded-full border px-3 py-1 text-xs font-semibold ${tones[tone] || tones.neutral} ${className}`}
+    >
+      {label}
+    </span>
+  );
+};
 
 export const Table = ({
   columns,
