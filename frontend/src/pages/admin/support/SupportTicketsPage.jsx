@@ -71,7 +71,12 @@ const SupportTicketsPage = () => {
         description="Support tickets capture service disruptions and customer concerns, improving reliability and trust through transparent resolution."
       />
 
-      <DataTable columns={ticketColumns} rows={tickets} />
+      <DataTable
+        columns={ticketColumns}
+        rows={tickets}
+        emptyMessage="No support tickets yet"
+        emptyDescription="New incidents and disruptions will appear here once reported."
+      />
 
       {/* Ticket data would be retrieved from a support case management service. */}
     </div>
