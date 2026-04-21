@@ -8,7 +8,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { ChartCard, MetricCard, Pill } from "../../../components/ui";
+import { ChartCard, MetricCard, PageHero, Pill } from "../../../components/ui";
 
 const OverviewPage = () => {
   const data = useMemo(
@@ -61,22 +61,15 @@ const OverviewPage = () => {
 
   return (
     <div className="space-y-8">
-      <div className="rounded-3xl border border-white/10 bg-gradient-to-br from-slate-950/90 via-slate-900/70 to-blue-950/70 p-6 shadow-lg shadow-slate-950/40">
-        <div className="flex flex-wrap items-center justify-between gap-4">
-          <div>
-            <h2 className="text-2xl font-semibold text-white">
-              Command Center Overview
-            </h2>
-            <p className="mt-2 text-sm text-slate-300">
-              This module aggregates live queue telemetry and operational KPIs
-              to guide staffing decisions and SLA compliance.
-            </p>
-          </div>
+      <PageHero
+        title="Command Center Overview"
+        description="This module aggregates live queue telemetry and operational KPIs to guide staffing decisions and SLA compliance."
+        badge={
           <Pill className="border-emerald-400/30 bg-emerald-500/15 text-emerald-300">
             Operational
           </Pill>
-        </div>
-      </div>
+        }
+      />
 
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
         {data.kpis.map((kpi) => (
