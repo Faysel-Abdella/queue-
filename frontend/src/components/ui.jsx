@@ -240,7 +240,11 @@ export const DataTable = ({
           {columns.map((column) => (
             <th
               key={column.key}
-              className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-300"
+              className={`px-4 py-3 text-xs font-semibold uppercase tracking-wider text-slate-300 ${
+                column.headerClassName || ""
+              } ${column.align === "center" ? "text-center" : "text-left"} ${
+                column.align === "right" ? "text-right" : ""
+              }`}
             >
               {column.header}
             </th>
@@ -272,10 +276,18 @@ export const DataTable = ({
               <tr key={rowKey} className={rowClassName}>
                 {columns.map((column) => {
                   const rawValue = row[column.key];
+                  const alignmentClassName =
+                    column.align === "center"
+                      ? "text-center"
+                      : column.align === "right"
+                        ? "text-right"
+                        : "text-left";
                   return (
                     <td
                       key={`${rowKey}-${column.key}`}
-                      className={column.cellClassName || "px-4 py-4"}
+                      className={`px-4 py-4 ${alignmentClassName} ${
+                        column.cellClassName || ""
+                      }`}
                     >
                       {column.render
                         ? column.render(rawValue, row, rowIndex)
