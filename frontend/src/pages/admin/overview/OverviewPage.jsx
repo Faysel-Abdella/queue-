@@ -8,7 +8,13 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { ChartCard, MetricCard, PageHero, Pill } from "../../../components/ui";
+import {
+  ChartCard,
+  InfoCard,
+  MetricCard,
+  PageHero,
+  Pill,
+} from "../../../components/ui";
 
 const OverviewPage = () => {
   const data = useMemo(
@@ -121,18 +127,12 @@ const OverviewPage = () => {
 
       <div className="grid gap-4 lg:grid-cols-3">
         {data.systemStatus.map((status) => (
-          <div
+          <InfoCard
             key={status.label}
-            className="rounded-2xl border border-white/10 bg-slate-950/70 p-5 shadow-lg shadow-slate-950/40"
-          >
-            <p className="text-xs uppercase tracking-[0.2em] text-slate-400">
-              {status.label}
-            </p>
-            <p className="mt-2 text-xl font-semibold text-white">
-              {status.value}
-            </p>
-            <p className="mt-2 text-sm text-slate-300">{status.detail}</p>
-          </div>
+            label={status.label}
+            value={status.value}
+            detail={status.detail}
+          />
         ))}
       </div>
 
