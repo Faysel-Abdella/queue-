@@ -90,6 +90,30 @@ export const InfoCard = ({
   </div>
 );
 
+export const IconInfoCard = ({
+  icon,
+  label,
+  value,
+  detail,
+  className = "",
+  labelClassName = "text-slate-300",
+  valueClassName = "text-white",
+  detailClassName = "text-slate-300",
+}) => (
+  <div
+    className={`rounded-2xl border border-white/10 bg-slate-950/70 p-5 shadow-lg shadow-slate-950/40 ${className}`}
+  >
+    <div className={`flex items-center gap-2 ${labelClassName}`}>
+      {icon}
+      <span className="text-xs uppercase tracking-[0.2em]">{label}</span>
+    </div>
+    {value !== undefined && value !== null && value !== "" && (
+      <p className={`mt-3 text-2xl font-semibold ${valueClassName}`}>{value}</p>
+    )}
+    {detail && <p className={`mt-2 text-sm ${detailClassName}`}>{detail}</p>}
+  </div>
+);
+
 export const FeatureCard = ({ title, description, icon, className = "" }) => (
   <div
     className={`rounded-2xl border border-white/10 bg-gradient-to-br from-slate-950/90 via-slate-900/70 to-blue-950/70 p-6 shadow-lg shadow-slate-950/40 ${className}`}
