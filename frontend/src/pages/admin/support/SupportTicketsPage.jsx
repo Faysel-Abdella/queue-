@@ -55,13 +55,14 @@ const SupportTicketsPage = () => {
     },
     { key: "type", header: "Issue Type" },
     { key: "reporter", header: "Reported By" },
-    { key: "priority", header: "Priority" },
+    { key: "priority", header: "Priority", align: "center" },
     {
       key: "status",
       header: "Status",
+      align: "center",
       render: (value) => <StatusBadge label={value} tone={statusTone[value]} />,
     },
-    { key: "createdAt", header: "Created" },
+    { key: "createdAt", header: "Created", align: "right" },
   ];
 
   return (
