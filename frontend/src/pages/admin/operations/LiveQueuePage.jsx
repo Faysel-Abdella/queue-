@@ -112,7 +112,15 @@ const LiveQueuePage = () => {
         }
       />
 
-      <DataTable columns={queueColumns} rows={data.queue} />
+      <DataTable
+        columns={queueColumns}
+        rows={data.queue}
+        rowClassName={(row) =>
+          `text-sm text-slate-200 ${
+            row.status === "Delayed" ? "bg-rose-500/5" : ""
+          }`
+        }
+      />
 
       {/* WebSocket hook would stream queue updates and update row status in real time. */}
     </div>

@@ -271,9 +271,13 @@ export const DataTable = ({
             const rowKey = getRowKey
               ? getRowKey(row, rowIndex)
               : row.id || rowIndex;
+            const resolvedRowClassName =
+              typeof rowClassName === "function"
+                ? rowClassName(row, rowIndex)
+                : rowClassName;
 
             return (
-              <tr key={rowKey} className={rowClassName}>
+              <tr key={rowKey} className={resolvedRowClassName}>
                 {columns.map((column) => {
                   const rawValue = row[column.key];
                   const alignmentClassName =
@@ -282,11 +286,15 @@ export const DataTable = ({
                       : column.align === "right"
                         ? "text-right"
                         : "text-left";
+                  const resolvedCellClassName =
+                    typeof column.cellClassName === "function"
+                      ? column.cellClassName(rawValue, row, rowIndex)
+                      : column.cellClassName || "";
                   return (
                     <td
                       key={`${rowKey}-${column.key}`}
                       className={`px-4 py-4 ${alignmentClassName} ${
-                        column.cellClassName || ""
+                        resolvedCellClassName
                       }`}
                     >
                       {column.render
