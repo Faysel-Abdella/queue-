@@ -63,15 +63,24 @@ const LiveQueuePage = () => {
       {
         key: "id",
         header: "Ticket ID",
+        sortable: true,
+        sortValue: (row) => Number(row.id.replace("T-", "")),
         cellClassName: "px-4 py-4 font-semibold text-white",
       },
       { key: "name", header: "Customer Name" },
       { key: "entry", header: "Entry Type" },
       { key: "service", header: "Service Type" },
-      { key: "wait", header: "Est. Wait" },
+      {
+        key: "wait",
+        header: "Est. Wait",
+        align: "right",
+        sortable: true,
+        sortValue: (row) => Number(row.wait.replace(" min", "")),
+      },
       {
         key: "status",
         header: "Status",
+        sortable: true,
         render: (value) => (
           <StatusBadge label={value} tone={statusTone[value]} />
         ),
@@ -115,6 +124,7 @@ const LiveQueuePage = () => {
       <DataTable
         columns={queueColumns}
         rows={data.queue}
+        defaultSort={{ key: "wait", direction: "desc" }}
         rowClassName={(row) =>
           `text-sm text-slate-200 ${
             row.status === "Delayed" ? "bg-rose-500/5" : ""

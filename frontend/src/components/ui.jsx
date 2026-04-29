@@ -230,87 +230,175 @@ export const DataTable = ({
   emptyMessage = "No records available.",
   emptyDescription,
   emptyAction,
-}) => (
-  <div
-    className={`overflow-hidden rounded-3xl border border-white/10 bg-slate-950/70 shadow-lg shadow-slate-950/40 ${className}`}
-  >
-    <table className="min-w-full divide-y divide-white/10">
-      <thead className="bg-slate-950/80">
-        <tr>
-          {columns.map((column) => (
-            <th
-              key={column.key}
-              className={`px-4 py-3 text-xs font-semibold uppercase tracking-wider text-slate-300 ${
-                column.headerClassName || ""
-              } ${column.align === "center" ? "text-center" : "text-left"} ${
-                column.align === "right" ? "text-right" : ""
-              }`}
-            >
-              {column.header}
-            </th>
-          ))}
-        </tr>
-      </thead>
-      <tbody className="divide-y divide-white/10">
-        {rows.length === 0 ? (
-          <tr>
-            <td colSpan={columns.length} className="px-4 py-10 text-center">
-              <p className="text-sm font-semibold text-slate-200">
-                {emptyMessage}
-              </p>
-              {emptyDescription && (
-                <p className="mt-1 text-xs text-slate-400">
-                  {emptyDescription}
-                </p>
-              )}
-              {emptyAction && <div className="mt-4">{emptyAction}</div>}
-            </td>
-          </tr>
-        ) : (
-          rows.map((row, rowIndex) => {
-            const rowKey = getRowKey
-              ? getRowKey(row, rowIndex)
-              : row.id || rowIndex;
-            const resolvedRowClassName =
-              typeof rowClassName === "function"
-                ? rowClassName(row, rowIndex)
-                : rowClassName;
+  defaultSort,
+}) => {
+  const [sortConfig, setSortConfig] = React.useState(defaultSort || null);
 
-            return (
-              <tr key={rowKey} className={resolvedRowClassName}>
-                {columns.map((column) => {
-                  const rawValue = row[column.key];
-                  const alignmentClassName =
-                    column.align === "center"
-                      ? "text-center"
-                      : column.align === "right"
-                        ? "text-right"
-                        : "text-left";
-                  const resolvedCellClassName =
-                    typeof column.cellClassName === "function"
-                      ? column.cellClassName(rawValue, row, rowIndex)
-                      : column.cellClassName || "";
-                  return (
-                    <td
-                      key={`${rowKey}-${column.key}`}
-                      className={`px-4 py-4 ${alignmentClassName} ${
-                        resolvedCellClassName
-                      }`}
+  const sortedRows = React.useMemo(() => {
+    if (!sortConfig || !sortConfig.key) {
+      return rows;
+    }
+
+    const targetColumn = columns.find(
+      (column) => column.key === sortConfig.key,
+    );
+    if (!targetColumn || !targetColumn.sortable) {
+      return rows;
+    }
+
+    const getSortValue = (row) =>
+      targetColumn.sortValue
+        ? targetColumn.sortValue(row)
+        : row[sortConfig.key];
+
+    const normalizedRows = [...rows];
+    normalizedRows.sort((a, b) => {
+      const valueA = getSortValue(a);
+      const valueB = getSortValue(b);
+
+      if (valueA === valueB) {
+        return 0;
+      }
+
+      if (typeof valueA === "number" && typeof valueB === "number") {
+        return sortConfig.direction === "asc"
+          ? valueA - valueB
+          : valueB - valueA;
+      }
+
+      const comparableA = String(valueA ?? "").toLowerCase();
+      const comparableB = String(valueB ?? "").toLowerCase();
+      const sortResult = comparableA.localeCompare(comparableB, undefined, {
+        numeric: true,
+      });
+
+      return sortConfig.direction === "asc" ? sortResult : -sortResult;
+    });
+
+    return normalizedRows;
+  }, [columns, rows, sortConfig]);
+
+  const toggleSort = (column) => {
+    if (!column.sortable) {
+      return;
+    }
+
+    setSortConfig((currentSort) => {
+      if (!currentSort || currentSort.key !== column.key) {
+        return { key: column.key, direction: "asc" };
+      }
+
+      if (currentSort.direction === "asc") {
+        return { key: column.key, direction: "desc" };
+      }
+
+      return null;
+    });
+  };
+
+  return (
+    <div
+      className={`overflow-hidden rounded-3xl border border-white/10 bg-slate-950/70 shadow-lg shadow-slate-950/40 ${className}`}
+    >
+      <table className="min-w-full divide-y divide-white/10">
+        <thead className="bg-slate-950/80">
+          <tr>
+            {columns.map((column) => {
+              const isActiveSort = sortConfig?.key === column.key;
+              const sortIndicator =
+                isActiveSort && sortConfig?.direction === "asc"
+                  ? "↑"
+                  : isActiveSort && sortConfig?.direction === "desc"
+                    ? "↓"
+                    : "↕";
+
+              return (
+                <th
+                  key={column.key}
+                  className={`px-4 py-3 text-xs font-semibold uppercase tracking-wider text-slate-300 ${
+                    column.headerClassName || ""
+                  } ${column.align === "center" ? "text-center" : "text-left"} ${
+                    column.align === "right" ? "text-right" : ""
+                  }`}
+                >
+                  {column.sortable ? (
+                    <button
+                      type="button"
+                      onClick={() => toggleSort(column)}
+                      className="inline-flex items-center gap-1 text-inherit"
                     >
-                      {column.render
-                        ? column.render(rawValue, row, rowIndex)
-                        : rawValue}
-                    </td>
-                  );
-                })}
-              </tr>
-            );
-          })
-        )}
-      </tbody>
-    </table>
-  </div>
-);
+                      <span>{column.header}</span>
+                      <span className="text-slate-500">{sortIndicator}</span>
+                    </button>
+                  ) : (
+                    column.header
+                  )}
+                </th>
+              );
+            })}
+          </tr>
+        </thead>
+        <tbody className="divide-y divide-white/10">
+          {sortedRows.length === 0 ? (
+            <tr>
+              <td colSpan={columns.length} className="px-4 py-10 text-center">
+                <p className="text-sm font-semibold text-slate-200">
+                  {emptyMessage}
+                </p>
+                {emptyDescription && (
+                  <p className="mt-1 text-xs text-slate-400">
+                    {emptyDescription}
+                  </p>
+                )}
+                {emptyAction && <div className="mt-4">{emptyAction}</div>}
+              </td>
+            </tr>
+          ) : (
+            sortedRows.map((row, rowIndex) => {
+              const rowKey = getRowKey
+                ? getRowKey(row, rowIndex)
+                : row.id || rowIndex;
+              const resolvedRowClassName =
+                typeof rowClassName === "function"
+                  ? rowClassName(row, rowIndex)
+                  : rowClassName;
+
+              return (
+                <tr key={rowKey} className={resolvedRowClassName}>
+                  {columns.map((column) => {
+                    const rawValue = row[column.key];
+                    const alignmentClassName =
+                      column.align === "center"
+                        ? "text-center"
+                        : column.align === "right"
+                          ? "text-right"
+                          : "text-left";
+                    const resolvedCellClassName =
+                      typeof column.cellClassName === "function"
+                        ? column.cellClassName(rawValue, row, rowIndex)
+                        : column.cellClassName || "";
+                    return (
+                      <td
+                        key={`${rowKey}-${column.key}`}
+                        className={`px-4 py-4 ${alignmentClassName} ${
+                          resolvedCellClassName
+                        }`}
+                      >
+                        {column.render
+                          ? column.render(rawValue, row, rowIndex)
+                          : rawValue}
+                      </td>
+                    );
+                  })}
+                </tr>
+              );
+            })
+          )}
+        </tbody>
+      </table>
+    </div>
+  );
+};
 
 export const ChartCard = ({
   title,
